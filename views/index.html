@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="generator" content="">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/css/animate.min.css" rel="stylesheet" />
+    <link href="/css/index.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/nprogress.css">
+</head>
+
+<body class="index-body">
+    <div class="wrap">
+        <div class="header">
+            <div class="tipbar">
+                 百度云查询
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 querybar">
+                        <input id='txt' type="text" class="form-control" placeholder="输入要查询的内容" maxlength=30 /><button id='btn' class="btn btn-primary">查 询</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-lg-7 content-wp">
+                    <div class='content'>数据加载中...</div>
+                </div>
+                <div class="col-lg-5 hidden-xs">
+                    <div id="right-panel" class="right-panel">
+                        <div id="hot-movie" class="hot-zone"></div>
+                        <div id="hot-tv" class="hot-zone"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src='/js/jquery-1.11.3.min.js'></script>
+    <script src='/js/nprogress.js'></script>
+    <script src='/js/index.js'></script>
+
+
+</body>
+
+</html>

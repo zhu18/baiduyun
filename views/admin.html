@@ -1,0 +1,217 @@
+<!doctype html> 
+<html>
+ <head>
+  <title><%= title %></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <link href="/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/css/font-awesome.min.css" rel="stylesheet" />
+  <link href="/css/animate.min.css" rel="stylesheet" />
+  <link href="/css/index.css" rel="stylesheet" />
+  <style>
+  </style> 
+ </head>
+
+ <body class="admin-body">
+ <div class="wrap">
+  <div class="header">
+   <div class="tipbar">
+    百度云查询-后台管理
+   </div>
+
+
+   </div>
+  <div class="container-fluid row-wrap">
+
+   <div class="row row1">
+    <div class="col-md-3 col-md-push-9 m m4">
+     <div id="btnRun" class="m-btn btn-start">
+      <div id="btntxt" class="btntxt"><i class="fa fa-play"></i>&emsp;启动爬虫</div>
+      <div id='txtTime' class="btntime">00:22:13</div>
+     </div>
+    </div>
+    <div class="col-md-3 col-md-pull-3 m m1">
+      <div class="m-title">总请求数</div>
+      <div class="m-body" id="txtRequestCount">0</div>
+    </div>
+    <div class="col-md-3 col-md-pull-3 m m2">
+     <div class="m-title">总请求用户数</div>
+     <div class="m-body" id="txtUserCount">0</div>
+    </div>
+    <div class="col-md-3 col-md-pull-3 m m3">
+     <div class="m-title">IP使用数</div>
+     <div class="m-body" id="txtProxyUsedCount">0</div>
+    </div>
+   </div>
+
+   <div class="row row2">
+    <div class="col-md-3 col-frist">
+     <div class="m m1">
+      <div class="m-title"><i class="fa fa-align-left m-img m-img-add"></i>新添加资源<div class="m-right-txt" id="txtNewCount">0</div></div>
+      <div class="m-body">
+       <ul class="m-body-list" id="listNew">
+        <li>暂无数据 </li>
+       </ul>
+      </div>
+     </div>
+    </div>
+    <div class="col-md-3">
+     <div class="m m2">
+      <div class="m-title"><i class="fa fa-repeat m-img m-img-repeat"></i>忽略重复资源<div class="m-right-txt" id="txtIgnoreCount">0</div></div>
+      <div class="m-body">
+       <ul class="m-body-list" id="listIgnore">
+        <li>暂无数据 </li>
+       </ul>
+      </div>
+     </div>
+    </div>
+    <div class="col-md-3">
+     <div class="m m2">
+      <div class="m-title"><i class="fa fa-search m-img m-img-repeat"></i>查询日志<div class="m-right-txt" id="txtQueryCount">0</div></div>
+      <div class="m-body">
+       <ul class="m-body-list" id="listQueryLog">
+        <li>暂无数据 </li>
+       </ul>
+      </div>
+     </div>
+    </div>
+    <div class="col-md-3 col-last">
+     <div class="m m3">
+      <div class="m-title"><i class="fa  fa-warning m-img m-img-repeat"></i>请求错误<div class="m-right-txt" id="txtErrorCount">0</div></div>
+      <div class="m-body">
+       <ul class="m-body-list" id="listError">
+        <li>暂无数据 </li>
+       </ul>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div class="row row3">
+    <div class="col-md-6 col-frist ">
+     <div class="m m1"></div>
+    </div>
+    <div class="col-md-6 col-last">
+     <div class="m m2"></div>
+    </div>
+
+   </div>
+
+  </div>
+
+
+ </div>
+ <script src='/js/jquery-1.11.3.min.js'></script>
+  <script>
+
+  var robot={};
+
+   //alert(isRuning);
+
+   $(function(){
+       getRobotInfo(function(){
+           init();
+       })
+   })
+
+  function getRobotInfo(next){
+      $.get('admin/robot/info?r='+Math.random(),function(res){
+          robot=res;
+          next();
+      })
+  }
+
+   function init(){
+       showInfo();
+
+       //bind btn event
+       $('#btnRun').on('click',function(){
+           var url=!robot.isRuning?'admin/robot/start':'admin/robot/stop';
+
+           $.get(url+'?r='+Math.random(),function(res){
+               getRobotInfo(function(){
+                   showInfo();
+               })
+           });
+       })
+   }
+
+
+   function setBtnByState(){
+       if(!robot.isRuning){
+           //启动状态btnRun
+           $('#btntxt').html('<i class="fa fa-play"></i>&emsp;启动');
+           $('#btnRun').removeClass('btn-stop').addClass('btn-start');
+       }
+       else
+       {
+           //停止状态
+           $('#btntxt').html('<i class="fa fa-stop"></i>&emsp;停止');
+           $('#btnRun').removeClass('btn-start').addClass('btn-stop');
+       }
+   }
+
+   function showInfo(){
+       setBtnByState();
+       //if(!robot.isRuning)return;
+       getRobotInfo(function(){
+           bandData();
+           setTimeout(showInfo,3000);
+       })
+   }
+
+   function bandData(){
+       var runTime= formatDuring((new Date().getTime())-robot.startTime);
+       $('#txtTime').text(runTime);
+       //row1
+       $("#txtRequestCount").text(robot.totalRequestCount);
+       $("#txtUserCount").text(robot.totalUserCount);
+       $("#txtProxyUsedCount").text(robot.proxyUsedCount);
+       //row2
+       $("#txtNewCount").text(robot.newCount);
+       $("#txtIgnoreCount").text(robot.ignoreCount);
+       $("#txtQueryCount").text(robot.queryLog.length);
+       $("#txtErrorCount").text(robot.errorCount);
+       //newlist
+       var newlisthtml='';
+       $(robot.newList).each(function(){
+           newlisthtml+='<li><i>'+this.time+': </i>'+this.data.message+'</li>';
+       })
+       $("#listNew").html(newlisthtml);
+       //Ignorelist
+       var ignorelisthtml='';
+       $(robot.ignoreList).each(function(){
+           ignorelisthtml+='<li><i>'+this.time+': </i>'+this.data.message+'</li>';
+       })
+       $("#listIgnore").html(ignorelisthtml);
+       //queryloglist
+       var queryloglisthtml='';
+       $(robot.queryLog).each(function(){
+           queryloglisthtml+='<li><i>'+this.time+': </i>IP:'+this.data.ip+' - '+this.data.key+'</li>';
+       })
+       $("#listQueryLog").html(queryloglisthtml);
+       //errorlist
+       var errorlisthtml='';
+       $(robot.errorList).each(function(){
+           errorlisthtml+='<li><i>'+this.time+': </i>'+this.data.message+'</li>';
+       })
+       $("#listError").html(errorlisthtml);
+
+   }
+
+   function formatDuring(mss) {
+       var days = parseInt(mss / (1000 * 60 * 60 * 24));
+       var hours = parseInt((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+       var minutes = parseInt((mss % (1000 * 60 * 60)) / (1000 * 60));
+       var seconds = Math.floor((mss % (1000 * 60)) / 1000);
+       return  hours + ":" + minutes + ":" + seconds + "";
+   }
+
+
+  </script>
+ </body>
+</html>
